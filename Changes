@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.002     2015-02-17 04:38:00+00:00 Europe/London
 	Features:
 	* Provides the string exception as the first parameter to ->fail() on failure,
 	for consistency with other IO::Async components.
