@@ -3,7 +3,7 @@ package IO::AsyncX::Sendfile;
 use strict;
 use warnings;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 =head1 NAME
 
@@ -92,6 +92,12 @@ Example usage:
      }
  );
 
+If the sendfile call fails, the returned L<Future> will fail with the
+string exception from $! as the failure reason, with sendfile => numeric $!,
+remaining bytes as the remaining details:
+
+ ==> ->fail("Some generic I/O error", "sendfile", EIO, 60000)
+
 =cut
 
 *IO::Async::Stream::sendfile = sub {
@@ -129,7 +135,7 @@ Example usage:
 			return ''; # empty string => call us again please
 		}
 
-		$f->fail(sendfile => $!, $remaining);
+		$f->fail("$!", sendfile => 0 + $!, $remaining);
 		return;
 	}, on_flush => sub {
 		$f->done($total) unless $f->is_ready;
